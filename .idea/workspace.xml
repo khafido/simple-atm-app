@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b9c1769-e24b-4c0b-a008-2b7445daab43" name="Changes" comment="" />
+    <list default="true" id="3b9c1769-e24b-4c0b-a008-2b7445daab43" name="Changes" comment="add data model">
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Customer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="29YPJufvJwRPm2R917CFihXPv2N" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -16,9 +45,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/Arkaan_N382/IdeaProjects/simple-atm-app/src/main/java/org/arkaan/simpleatm/datamodel"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Arkaan_N382\IdeaProjects\simple-atm-app\src\main\java\org\arkaan\simpleatm\datamodel" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -28,6 +63,49 @@
       <option name="presentableId" value="Default" />
       <updated>1653286978923</updated>
     </task>
+    <task id="LOCAL-00001" summary="initial commit">
+      <created>1653287256894</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1653287256894</updated>
+    </task>
+    <task id="LOCAL-00002" summary="initial commit">
+      <created>1653287290927</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1653287290927</updated>
+    </task>
+    <task id="LOCAL-00003" summary="initial commit">
+      <created>1653287328189</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1653287328189</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add data model">
+      <created>1653287863459</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1653287863459</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add data model">
+      <created>1653288195264</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1653288195264</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add data model">
+      <created>1653288424265</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1653288424265</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -35,10 +113,27 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="development" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial commit" />
+    <MESSAGE value="add data model" />
+    <option name="LAST_COMMIT_MESSAGE" value="add data model" />
   </component>
 </project>
