@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b9c1769-e24b-4c0b-a008-2b7445daab43" name="Changes" comment="add data model">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/arkaan/simpleatm/datamodel/Customer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +20,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -53,6 +55,26 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Arkaan_N382\IdeaProjects\simple-atm-app\src\main\java\org\arkaan\simpleatm\datamodel" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="SimpleAtm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.arkaan.simpleatm.SimpleAtm" />
+      <module name="simple-atm-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.arkaan.simpleatm.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.SimpleAtm" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -105,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653288424265</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add data model">
+      <created>1653289247333</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1653289247333</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
