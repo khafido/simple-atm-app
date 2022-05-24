@@ -6,35 +6,35 @@ import java.util.List;
 public class Customer {
     private final String name;
     private double balance;
-    private List<Transaction> transactionList;
+    private final List<Transaction> transactionList;
 
-    public Customer(String name, double balance) {
+    Customer(String name, double balance) {
+        transactionList = new ArrayList<>();
         this.name = name;
         this.balance = balance;
     }
 
-    public void addBalance(double amount) {
+    void addBalance(double amount) {
         balance += amount;
     }
 
-    public void reduceBalance(double amount) {
+    void reduceBalance(double amount) {
         balance -= amount;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public double getBalance() {
+    double getBalance() {
         return balance;
     }
 
-    public void addTransaction(Transaction transaction) {
-        if (transactionList == null) transactionList = new ArrayList<>();
+    void addTransaction(Transaction transaction) {
         transactionList.add(transaction);
     }
 
-    public List<Transaction> getTransactionList() {
+    List<Transaction> getTransactionList() {
         return transactionList;
     }
 }
