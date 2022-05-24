@@ -11,7 +11,6 @@ public class App {
     enum State {
         AUTHENTICATED,
         IDLE,
-        AUTHENTICATING,
         OFFLINE
     }
 
@@ -32,12 +31,12 @@ public class App {
 
     void authenticate() {
         System.out.println("Enter your card name:");
-        String username = stdIn.nextLine();
+        String username = stdIn.next();
         Optional<Card> auth = atmRepository.findOne(username);
         if (auth.isPresent()) {
             Card card = auth.get();
             System.out.println("Enter your pin:");
-            String pin = stdIn.nextLine();
+            String pin = stdIn.next();
             if (pin.equals(card.getPin())) {
                 setCurrentUser(card);
                 state = State.AUTHENTICATED;
@@ -120,10 +119,6 @@ public class App {
         return state;
     }
 
-    boolean isAuthenticated() {
-        return currentUser != null;
-    }
-
     void displayMenu() {
         int selected = 99;
         while (selected != 0) {
@@ -161,7 +156,7 @@ public class App {
                 case 0: {
                     setCurrentUser(null);
                     stdIn.reset();
-//                    state = State.IDLE;
+                    state = State.IDLE;
                 }
             }
         }
@@ -188,6 +183,6 @@ class SimpleAtm {
                     break;
                 }
             }
-        } while (app.isAuthenticated());
+        } while (app.getState() != App.State.OFFLINE);
     }
 }
