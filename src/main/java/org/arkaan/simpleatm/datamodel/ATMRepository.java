@@ -84,10 +84,11 @@ public class ATMRepository {
         System.out.println("===================");
         System.out.println("Transaction History");
         System.out.println();
-        System.out.println("No.\tType\t\t\t\t\tStatus\t\tDetail");
+        String header = String.format("%-5s %-15s %-10s %s %n", "NO", "TYPE", "STATUS", "DETAIL");
+        System.out.printf(header);
         int i = 1;
         for (Transaction tr : customer.getTransactionList()) {
-            System.out.printf("%d.\t%s\t\t\t\t%s\t\t%s\n", i++, tr.getType(), tr.getStatus(), tr.getDetail());
+            System.out.printf("%-5s %-15s %-10s %s %n", i++, tr.getType(), tr.getStatus(), tr.getDetail());
         }
         System.out.println();
     }
