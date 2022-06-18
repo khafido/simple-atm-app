@@ -137,10 +137,10 @@ public class App {
         System.out.print("Enter account number (destination): ");
         stdIn.nextLine();
         String destinationInput = stdIn.nextLine();
-        if (destinationInput.isBlank()) return;
+        if (destinationInput.trim().isEmpty()) return;
         System.out.print("Enter amount: ");
         String amountInput = stdIn.nextLine();
-        if (amountInput.isBlank()) return;
+        if (amountInput.trim().isEmpty()) return;
         
         String ref = String.format("%04d", random.nextInt(999999));
         System.out.println("\n=================================");
