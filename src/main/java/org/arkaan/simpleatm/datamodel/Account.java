@@ -3,12 +3,12 @@ package org.arkaan.simpleatm.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Customer {
+public class Account {
     private final String name;
     private Integer balance;
     private final List<Transaction> transactionList;
 
-    Customer(String name, Integer balance) {
+    Account(String name, Integer balance) {
         transactionList = new ArrayList<>();
         this.name = name;
         this.balance = balance;
@@ -35,6 +35,6 @@ public class Customer {
     }
 
     List<Transaction> getTransactionList() {
-        return transactionList;
+        return new ArrayList<>(transactionList);
     }
 }

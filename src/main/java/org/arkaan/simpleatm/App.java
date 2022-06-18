@@ -3,7 +3,11 @@ package org.arkaan.simpleatm;
 import org.arkaan.simpleatm.datamodel.Card;
 import org.arkaan.simpleatm.datamodel.ATMRepository;
 import org.arkaan.simpleatm.datamodel.Transaction;
+import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -137,10 +141,10 @@ public class App {
         System.out.print("Enter account number (destination): ");
         stdIn.nextLine();
         String destinationInput = stdIn.nextLine();
-        if (destinationInput.isBlank()) return;
+        if (destinationInput.trim().isEmpty()) return;
         System.out.print("Enter amount: ");
         String amountInput = stdIn.nextLine();
-        if (amountInput.isBlank()) return;
+        if (amountInput.trim().isEmpty()) return;
         
         String ref = String.format("%04d", random.nextInt(999999));
         System.out.println("\n=================================");
@@ -243,12 +247,47 @@ public class App {
 }
 
 class SimpleAtm {
+    private static ATMRepository initRepository(String path) {
+        ATMRepository atmRepository = new ATMRepository();
+        System.out.println("Loading data..");
+        try (FileReader fileReader = new FileReader(path)) {
+            BufferedReader reader = new BufferedReader(fileReader);
+            while (reader.ready()) {
+                try {
+                    String[] row = reader.readLine().split(",");
+                    atmRepository.addAccount(new Card(
+                        Integer.valueOf(row[1]),
+                        row[0],
+                        Integer.valueOf(row[2]), 
+                        Integer.valueOf(row[3])));
+                } catch (DuplicateAccountNumberException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("Skipped duplicate");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("File not found");
+            System.exit(0);
+        } catch (NumberFormatException e) {
+            System.out.println("CSV file contains invalid format");
+            System.exit(0);
+        }
+        System.out.println("Done.\n\n");
+        return atmRepository;
+    }
 
     public static void main(String[] args) {
-        ATMRepository atmRepository = new ATMRepository();
-        atmRepository.addAccount(new Card(123456, "user1", 1_000, 776643));
-        atmRepository.addAccount(new Card(123456, "user2", 1_000, 774921));
-        atmRepository.addAccount(new Card(123456, "user3", 1_000, 777106));
+        ATMRepository atmRepository;
+        if (args.length == 0) {
+            System.out.println("Using default data..");
+            atmRepository = new ATMRepository();
+            atmRepository.addAccount(new Card(123456, "user1", 1_000, 776643));
+            atmRepository.addAccount(new Card(123456, "user2", 1_000, 774921));
+            atmRepository.addAccount(new Card(123456, "user3", 1_000, 777106));
+        } else {
+            atmRepository = initRepository(args[0]);
+        }
+        
         App app = new App(atmRepository);
 
         do {
