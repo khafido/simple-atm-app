@@ -1,26 +1,29 @@
 package org.arkaan.simpleatm.datamodel;
 
-import java.util.UUID;
-
 public class Transaction {
+    
+    private static int increment = 0;
 
     public enum Status {
         SUCCESS,
         FAILED
     }
-    private final UUID id;
+    
+    private final Integer id;
     private final Type type;
     private final String detail;
     private final Status status;
+    private final int accountNumber;
 
-    public Transaction(Type type, String detail, Status status) {
+    public Transaction(Type type, String detail, Status status, int accountNumber) {
         this.type = type;
         this.detail = detail;
-        id = UUID.randomUUID();
+        id = increment++;
         this.status = status;
+        this.accountNumber = accountNumber;
     }
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -34,5 +37,9 @@ public class Transaction {
 
     public Status getStatus() {
         return status;
+    }
+    
+    public int getAccountNumber() {
+        return accountNumber;
     }
 }

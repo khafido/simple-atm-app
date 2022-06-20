@@ -1,40 +1,59 @@
 package org.arkaan.simpleatm.datamodel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 public class Account {
+    
+    private final int accountNumber;
+    private final int pin;
     private final String name;
-    private Integer balance;
-    private final List<Transaction> transactionList;
+    private int balance;
 
-    Account(String name, Integer balance) {
-        transactionList = new ArrayList<>();
+    public Account(int accountNumber, int pin, String name, int balance) {
         this.name = name;
         this.balance = balance;
+        this.pin = pin;
+        this.accountNumber = accountNumber;
     }
 
-    void addBalance(Integer amount) {
+    public void addBalance(int amount) {
         balance += amount;
     }
 
-    void reduceBalance(Integer amount) {
+    public void reduceBalance(int amount) {
         balance -= amount;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    Integer getBalance() {
+    public int getBalance() {
         return balance;
     }
-
-    void addTransaction(Transaction transaction) {
-        transactionList.add(transaction);
+    
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public int getPin() {
+        return pin;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountNumber);
     }
 
-    List<Transaction> getTransactionList() {
-        return new ArrayList<>(transactionList);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Account)) {
+            return false;
+        }
+        Account other = (Account) obj;
+        return Objects.equals(accountNumber, other.accountNumber);
     }
 }

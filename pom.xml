@@ -39,7 +39,7 @@
                     <finalName>simple-atm-app</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>org.arkaan.simpleatm.SimpleAtm</mainClass>
+                            <mainClass>org.arkaan.simpleatm.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,64 +1,55 @@
 package org.arkaan.simpleatm;
 
-import org.arkaan.simpleatm.datamodel.Card;
-import org.arkaan.simpleatm.datamodel.ATMRepository;
+import org.arkaan.simpleatm.datamodel.Account;
+import org.arkaan.simpleatm.datamodel.AccountRepo;
+import org.arkaan.simpleatm.datamodel.TransactionRepo;
+import org.arkaan.simpleatm.util.Pair;
 import org.arkaan.simpleatm.datamodel.Transaction;
-import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
+import org.arkaan.simpleatm.datamodel.Transaction.Status;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
-public class App {
+class SimpleAtm {
     enum State {
         AUTHENTICATED,
         IDLE,
         OFFLINE
     }
 
-    private Card currentUser;
-    private final ATMRepository atmRepository;
     private State state;
     private final Scanner stdIn;
     private final Random random;
-    private final DateTimeFormatter dateTimeFormatter;
-
-    App(ATMRepository atmRepository) {
-        this.atmRepository = atmRepository;
+    private final ATMService atmService;
+    private int current;
+    
+    SimpleAtm(ATMService atmService) {
         state = State.IDLE;
         stdIn = new Scanner(System.in);
         random = new Random();
-        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.atmService = atmService;
     }
-
-    private void setCurrentUser(Card currentUser) {
-        this.currentUser = currentUser;
+    
+    private void setCurrentAccount(int accountNumber) {
+        current = accountNumber;
     }
 
     void authenticate() {
         System.out.println("Enter your account number:");
-        String accountNumber = stdIn.next();
-        if (!validateAuth(accountNumber, "Account Number")) return;
+        String account = stdIn.next();
+        if (!validateAuth(account, "Account Number")) return;
         System.out.println("Enter your pin:");
         String pin = stdIn.next();
         if (!validateAuth(pin, "PIN")) return;
-        Optional<Card> auth = atmRepository.findOne(Integer.valueOf(accountNumber));
-        boolean isValid = false;
-        if (auth.isPresent()) {
-            Card card = auth.get();
-            if (Integer.valueOf(pin).equals(card.getPin())) {
-                setCurrentUser(card);
-                state = State.AUTHENTICATED;
-                isValid = true;
-            }
+        
+        int accountNumber = Integer.parseInt(account);
+        boolean isValid = atmService.authenticate(accountNumber, Integer.parseInt(pin));
+        if (isValid) {
+            state = State.AUTHENTICATED;
+            setCurrentAccount(accountNumber);
+        } else {
+            System.out.println("Invalid account number / pin");
         }
-        if (!isValid) System.out.println("Invalid account number / pin");
     }
     
     private boolean validateAuth(String input, String s) {
@@ -103,19 +94,12 @@ public class App {
         } else {
             amount = amountList[amountSelect - 1];
         }
-        try {
-            String date = LocalDateTime.now().format(dateTimeFormatter);
-            Transaction.Status status = atmRepository
-                    .withdrawMoney(amount, currentUser, date);
-            if (status == Transaction.Status.FAILED) {
-                System.out.println("Withdraw failed.");
-            } else {
-        	System.out.println("================================");
-                System.out.printf("Summary (%s) %nAmount: $%d %n", date, amount);
-                System.out.println("================================\n");
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Please select appropriate input.");
+        
+        Transaction.Status status = atmService.withdraw(current, amount);
+        if (status == Transaction.Status.FAILED) {
+            System.out.println("Withdraw failed.");
+        } else {
+            System.out.println("Withdraw success.");
         }
     }
 
@@ -124,8 +108,8 @@ public class App {
         System.out.println("==============\n1. $10\n2. $50\n3. $100\n4. Other\n5. Back\n");
         int amount = stdIn.nextInt();
         try {
-            Transaction.Status status = atmRepository
-                    .depositMoney(amountList[amount - 1], currentUser);
+            Transaction.Status status = atmService
+                    .deposit(current, amountList[amount - 1]);
             if (status == Transaction.Status.FAILED) {
                 System.out.println("Deposit failed.");
             } else {
@@ -177,26 +161,24 @@ public class App {
             return;
         }
         
-        String date = LocalDateTime.now().format(dateTimeFormatter);
+        Pair<Status, String> result = atmService.transfer(
+                current, Integer.parseInt(destinationInput), amount, ref);
         
-        Transaction.Status status = atmRepository
-                .transferMoney(amount, currentUser, destinationInput, ref, date);
-        if (status == Transaction.Status.FAILED) {
+        if (result.getFirst() == Transaction.Status.FAILED) {
             System.out.println("Transfer failed.\n");
         } else {
             System.out.println("\n=================================");
-            System.out.printf("Transfer Summary (%s) %nDestination account\t: %s %nAmount\t\t\t: $%s %nRef. Number\t\t: %s %nBalance\t\t\t: $%d %n",
-            	date, destinationInput, amountInput, ref, currentUser.getAccountBalance());
+            System.out.println(result.getSecond());
             System.out.println("=================================\n");
         }
     }
 
     private void viewTransactionHistory() {
-        atmRepository.displayTransactionHistory(currentUser);
+        atmService.displayTransactionHistory(current);
     }
 
     private void getBalance() {
-        System.out.printf("Your balance: $%d%n%n", currentUser.getAccountBalance());
+        System.out.printf("Your balance: $%d%n%n", atmService.getAccountBalance(current));
     }
 
     State getState() {
@@ -238,7 +220,7 @@ public class App {
                     break;
                 }
                 case 0: {
-                    setCurrentUser(null);
+                    setCurrentAccount(-99);
                     stdIn.reset();
                     state = State.IDLE;
                 }
@@ -247,62 +229,39 @@ public class App {
     }
 }
 
-class SimpleAtm {
-    private static ATMRepository initRepository(String path) {
-        ATMRepository atmRepository = new ATMRepository();
-        System.out.println("Loading data..");
-        try (FileReader fileReader = new FileReader(path)) {
-            BufferedReader reader = new BufferedReader(fileReader);
-            while (reader.ready()) {
-                try {
-                    String[] row = reader.readLine().split(",");
-                    atmRepository.addAccount(new Card(
-                        Integer.valueOf(row[1]),
-                        row[0],
-                        Integer.valueOf(row[2]), 
-                        Integer.valueOf(row[3])));
-                } catch (DuplicateAccountNumberException e) {
-                    System.out.println(e.getMessage());
-                    System.out.println("Skipped duplicate");
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("File not found");
-            System.exit(0);
-        } catch (NumberFormatException e) {
-            System.out.println("CSV file contains invalid format");
-            System.exit(0);
-        }
-        System.out.println("Done.\n\n");
-        return atmRepository;
-    }
-
+public class App {
+    
     public static void main(String[] args) {
-        ATMRepository atmRepository;
+        AccountRepo accountRepo = new AccountRepo();
+        TransactionRepo transactionRepo = new TransactionRepo();
+        
         if (args.length == 0) {
             System.out.println("Using default data..");
-            URL csv = App.class.getClassLoader().getResource("accounts.csv");
-            atmRepository = initRepository(csv.getPath());
+            accountRepo.save(new Account(776643, 123456, "user1", 1000));
+            accountRepo.save(new Account(779212, 123456, "user2", 1000));
+            accountRepo.save(new Account(776787, 123456, "user3", 1000));
         } else {
-            atmRepository = initRepository(args[0]);
+            accountRepo.initializeData(args[0]);
         }
         
-        App app = new App(atmRepository);
+        ATMService atmService = new ATMService(transactionRepo, accountRepo);
+        
+        SimpleAtm atm = new SimpleAtm(atmService);
 
         do {
-            switch (app.getState()) {
+            switch (atm.getState()) {
                 case IDLE: {
-                    app.authenticate();
+                    atm.authenticate();
                     break;
                 }
                 case AUTHENTICATED: {
-                    app.displayMenu();
+                    atm.displayMenu();
                     break;
                 }
                 case OFFLINE: {
                     break;
                 }
             }
-        } while (app.getState() != App.State.OFFLINE);
+        } while (atm.getState() != SimpleAtm.State.OFFLINE);
     }
 }
