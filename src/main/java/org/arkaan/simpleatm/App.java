@@ -8,6 +8,7 @@ import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -280,10 +281,8 @@ class SimpleAtm {
         ATMRepository atmRepository;
         if (args.length == 0) {
             System.out.println("Using default data..");
-            atmRepository = new ATMRepository();
-            atmRepository.addAccount(new Card(123456, "user1", 1_000, 776643));
-            atmRepository.addAccount(new Card(123456, "user2", 1_000, 774921));
-            atmRepository.addAccount(new Card(123456, "user3", 1_000, 777106));
+            URL csv = App.class.getClassLoader().getResource("accounts.csv");
+            atmRepository = initRepository(csv.getPath());
         } else {
             atmRepository = initRepository(args[0]);
         }

@@ -9,18 +9,18 @@
     <li>See transaction history</li>
 </ol>
 
-<h3>Account number:PIN</h3>
-<ul>
-    <li>776643:123456</li>
-    <li>774921:123456</li>
-    <li>777106:123456</li>
-</ul>
+<p>Default accounts can be found in <code>resources/accounts.csv</code></p>
+<p>Formatted as: <small>[Name,PIN,Balance,Account Number]</small><p>
+<p>I.e.</e>
+<p>Carree,123456,798,776643</p>
+<p>Merrie,844831,891,774921</p>
+<p>Caressa,968661,604,777106</p>
+<p>...</p>
 
-<h3>Initial balance</h3>
-<p>$1000</p>
+<h5>Or pass a CSV file as argument</h5>
 
 <h3>Run</h3>
 <code>mvn clean package</code>
 <br>
 <br>
-<code>java -jar target/simple-atm-app.jar</code>
+<code>java -jar target/simple-atm-app.jar [path-to-csv]</code>
