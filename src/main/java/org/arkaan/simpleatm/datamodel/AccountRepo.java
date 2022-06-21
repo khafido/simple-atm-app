@@ -4,20 +4,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
 
-public class AccountRepo implements Repository<Account> {
-
-    private final List<Account> accountList;
+public class AccountRepo extends AbstractRepository<Account> {
+    // name, pin, balance, account number
     
-    public AccountRepo() {
-        accountList = new ArrayList<>();
+    public AccountRepo(String csvPath) {
+        super(new ArrayList<>(), csvPath);
     }
-    
-    public void initializeData(String csvPath) {
+
+    @Override
+    protected void initData(String csvPath) {
         System.out.println("Loading data..");
         try (FileReader fileReader = new FileReader(csvPath)) {
             BufferedReader reader = new BufferedReader(fileReader);
@@ -42,28 +41,24 @@ public class AccountRepo implements Repository<Account> {
             System.exit(0);
         }
         System.out.println("Done.\n\n");
-        
-        for (Account a : accountList) {
-            System.out.printf("name: %s account: %s pin: %s balance: %s %n", a.getName(), a.getAccountNumber(), a.getPin(), a.getBalance());
-        }
     }
 
     @Override
     public Optional<Account> findOne(int id) {
-        return accountList.stream()
+        return data.stream()
                 .filter(it -> it.getAccountNumber() == id)
                 .findFirst();
     }
 
     @Override
-    public Account save(Account data) {
-        boolean check = findOne(data.getAccountNumber()).isPresent();
+    public Account save(Account newAccount) {
+        boolean check = findOne(newAccount.getAccountNumber()).isPresent();
         if (!check) {
-            accountList.add(data);
+            this.data.add(newAccount);
         } else {
-            throw new DuplicateAccountNumberException(data.getAccountNumber());
+            throw new DuplicateAccountNumberException(newAccount.getAccountNumber());
         }
-        return data;
+        return newAccount;
     }
 
     @Override
@@ -77,10 +72,9 @@ public class AccountRepo implements Repository<Account> {
         Optional<Account> findById = findOne(id);
         if (findById.isPresent()) {
             Account account = findById.get();
-            accountList.remove(account);
+            data.remove(account);
             return account;
         }
         return null;
     }
-    
 }

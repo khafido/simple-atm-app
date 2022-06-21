@@ -156,4 +156,9 @@ public class ATMService {
         }
         return account.get().getBalance();
     }
+    
+    public void saveToFile() {
+        accountRepo.saveAll();
+        transactionRepo.saveAll();
+    }
 }

@@ -7,4 +7,5 @@ public interface Repository<T> {
     T save(T data);
     T update(int id, T data);
     T remove(int id);
+    void saveAll();
 }

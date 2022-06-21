@@ -42,4 +42,9 @@ public class Transaction {
     public int getAccountNumber() {
         return accountNumber;
     }
+    
+    @Override
+    public String toString() {
+        return String.join(",", type.toString(), detail, status.toString(), String.valueOf(accountNumber));
+    }
 }

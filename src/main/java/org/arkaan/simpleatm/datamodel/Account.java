@@ -56,4 +56,9 @@ public class Account {
         Account other = (Account) obj;
         return Objects.equals(accountNumber, other.accountNumber);
     }
+    
+    @Override
+    public String toString() {
+        return String.join(",", name, String.valueOf(pin), String.valueOf(balance), String.valueOf(accountNumber));
+    }
 }

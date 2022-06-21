@@ -1,12 +1,14 @@
 package org.arkaan.simpleatm;
 
-import org.arkaan.simpleatm.datamodel.Account;
 import org.arkaan.simpleatm.datamodel.AccountRepo;
 import org.arkaan.simpleatm.datamodel.TransactionRepo;
 import org.arkaan.simpleatm.util.Pair;
 import org.arkaan.simpleatm.datamodel.Transaction;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,7 +23,7 @@ class SimpleAtm {
     private final Scanner stdIn;
     private final Random random;
     private final ATMService atmService;
-    private int current;
+    private int currentAccount;
     
     SimpleAtm(ATMService atmService) {
         state = State.IDLE;
@@ -31,7 +33,7 @@ class SimpleAtm {
     }
     
     private void setCurrentAccount(int accountNumber) {
-        current = accountNumber;
+        currentAccount = accountNumber;
     }
 
     void authenticate() {
@@ -95,7 +97,7 @@ class SimpleAtm {
             amount = amountList[amountSelect - 1];
         }
         
-        Transaction.Status status = atmService.withdraw(current, amount);
+        Transaction.Status status = atmService.withdraw(currentAccount, amount);
         if (status == Transaction.Status.FAILED) {
             System.out.println("Withdraw failed.");
         } else {
@@ -109,7 +111,7 @@ class SimpleAtm {
         int amount = stdIn.nextInt();
         try {
             Transaction.Status status = atmService
-                    .deposit(current, amountList[amount - 1]);
+                    .deposit(currentAccount, amountList[amount - 1]);
             if (status == Transaction.Status.FAILED) {
                 System.out.println("Deposit failed.");
             } else {
@@ -162,7 +164,7 @@ class SimpleAtm {
         }
         
         Pair<Status, String> result = atmService.transfer(
-                current, Integer.parseInt(destinationInput), amount, ref);
+                currentAccount, Integer.parseInt(destinationInput), amount, ref);
         
         if (result.getFirst() == Transaction.Status.FAILED) {
             System.out.println("Transfer failed.\n");
@@ -174,11 +176,11 @@ class SimpleAtm {
     }
 
     private void viewTransactionHistory() {
-        atmService.displayTransactionHistory(current);
+        atmService.displayTransactionHistory(currentAccount);
     }
 
     private void getBalance() {
-        System.out.printf("Your balance: $%d%n%n", atmService.getAccountBalance(current));
+        System.out.printf("Your balance: $%d%n%n", atmService.getAccountBalance(currentAccount));
     }
 
     State getState() {
@@ -220,6 +222,7 @@ class SimpleAtm {
                     break;
                 }
                 case 0: {
+                    atmService.saveToFile();
                     setCurrentAccount(-99);
                     stdIn.reset();
                     state = State.IDLE;
@@ -232,16 +235,32 @@ class SimpleAtm {
 public class App {
     
     public static void main(String[] args) {
-        AccountRepo accountRepo = new AccountRepo();
-        TransactionRepo transactionRepo = new TransactionRepo();
+        AccountRepo accountRepo;
+        TransactionRepo transactionRepo;
         
         if (args.length == 0) {
-            System.out.println("Using default data..");
-            accountRepo.save(new Account(776643, 123456, "user1", 1000));
-            accountRepo.save(new Account(779212, 123456, "user2", 1000));
-            accountRepo.save(new Account(776787, 123456, "user3", 1000));
+            System.out.println("Please provide csv file");
+            return;
         } else {
-            accountRepo.initializeData(args[0]);
+            accountRepo = new AccountRepo(args[0]);
+            
+            File resource = new File(System.getProperty("user.home") + "/atm-simulation"); 
+            String trxCsvPath;
+            
+            if (!resource.exists()) {
+                resource.mkdir();
+            }
+            
+            File trxCsv = new File(resource.getPath() + "/transactions.csv");
+            try {
+                trxCsv.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Failed to create file");
+            }
+            
+            trxCsvPath = trxCsv.getPath();
+            System.out.println("Transaction history file: " + trxCsvPath);
+            transactionRepo = new TransactionRepo(trxCsvPath);
         }
         
         ATMService atmService = new ATMService(transactionRepo, accountRepo);
@@ -249,18 +268,23 @@ public class App {
         SimpleAtm atm = new SimpleAtm(atmService);
 
         do {
-            switch (atm.getState()) {
-                case IDLE: {
-                    atm.authenticate();
-                    break;
+            try {                
+                switch (atm.getState()) {
+                    case IDLE: {
+                        atm.authenticate();
+                        break;
+                    }
+                    case AUTHENTICATED: {
+                        atm.displayMenu();
+                        break;
+                    }
+                    case OFFLINE: {
+                        break;
+                    }
                 }
-                case AUTHENTICATED: {
-                    atm.displayMenu();
-                    break;
-                }
-                case OFFLINE: {
-                    break;
-                }
+            } catch (NoSuchElementException e) {
+                System.out.println("Exit..");
+                System.exit(0);
             }
         } while (atm.getState() != SimpleAtm.State.OFFLINE);
     }
