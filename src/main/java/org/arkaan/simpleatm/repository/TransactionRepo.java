@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm.datamodel;
+package org.arkaan.simpleatm.repository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.arkaan.simpleatm.datamodel.Transaction;
+import org.arkaan.simpleatm.datamodel.Type;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
 
-public class TransactionRepo extends AbstractRepository<Transaction> {
-    
-    public TransactionRepo() {
-        super(new ArrayList<>(), null);
-    }
+public class TransactionRepo extends CsvRepository<Transaction> 
+        implements Repository.TransactionRepository {
     
     public TransactionRepo(String csvPath) {
         super(new ArrayList<>(), csvPath);
@@ -57,25 +56,16 @@ public class TransactionRepo extends AbstractRepository<Transaction> {
     
     @Override
     public Transaction update(int id, Transaction newData) {
-        Optional<Transaction> tr = findOne(id);
-        if (tr.isPresent()) {
-            data.set(id, newData);
-            return newData;
-        }
         return null;
     }
     
 
     @Override
     public Transaction remove(int id) {
-        Optional<Transaction> tr = findOne(id);
-        if (tr.isPresent()) {
-            data.remove(id);
-            return tr.get();
-        }
         return null;
     }
     
+    @Override
     public List<Transaction> findByAccountNumber(int accountNumber) {
         return data.stream()
                 .filter(it -> it.getAccountNumber() == accountNumber)

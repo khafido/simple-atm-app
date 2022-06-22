@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm.datamodel;
+package org.arkaan.simpleatm.repository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.arkaan.simpleatm.datamodel.Account;
 import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
 
-public class AccountRepo extends AbstractRepository<Account> {
+public class AccountRepo extends CsvRepository<Account> 
+        implements Repository.AccountRepository {
     // name, pin, balance, account number
     
     public AccountRepo(String csvPath) {
@@ -17,7 +19,7 @@ public class AccountRepo extends AbstractRepository<Account> {
 
     @Override
     protected void initData(String csvPath) {
-        System.out.println("Loading data..");
+        System.out.println("Loading account data..");
         try (FileReader fileReader = new FileReader(csvPath)) {
             BufferedReader reader = new BufferedReader(fileReader);
             while (reader.ready()) {
@@ -40,7 +42,7 @@ public class AccountRepo extends AbstractRepository<Account> {
             System.out.println("CSV file contains invalid format");
             System.exit(0);
         }
-        System.out.println("Done.\n\n");
+        System.out.println("Done.\n");
     }
 
     @Override
@@ -63,18 +65,11 @@ public class AccountRepo extends AbstractRepository<Account> {
 
     @Override
     public Account update(int id, Account data) {
-        // TODO
         return null;
     }
 
     @Override
     public Account remove(int id) {
-        Optional<Account> findById = findOne(id);
-        if (findById.isPresent()) {
-            Account account = findById.get();
-            data.remove(account);
-            return account;
-        }
         return null;
     }
 }

@@ -1,16 +1,16 @@
-package org.arkaan.simpleatm.datamodel;
+package org.arkaan.simpleatm.repository;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class AbstractRepository<T> implements Repository<T> {
+public abstract class CsvRepository<T> {
     
     protected final List<T> data;
     protected final String csvPath;
     
-    public AbstractRepository(List<T> data, String csvPath) {
+    public CsvRepository(List<T> data, String csvPath) {
         this.data = data;
         this.csvPath = csvPath;
         initData(csvPath);

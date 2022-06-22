@@ -7,20 +7,23 @@ import java.util.List;
 import java.util.Optional;
 
 import org.arkaan.simpleatm.datamodel.Account;
-import org.arkaan.simpleatm.datamodel.AccountRepo;
 import org.arkaan.simpleatm.datamodel.Transaction;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
-import org.arkaan.simpleatm.datamodel.TransactionRepo;
+import org.arkaan.simpleatm.repository.Repository.AccountRepository;
+import org.arkaan.simpleatm.repository.Repository.TransactionRepository;
 import org.arkaan.simpleatm.datamodel.Type;
 import org.arkaan.simpleatm.util.Pair;
 
 public class ATMService {
     
-    private final TransactionRepo transactionRepo;
-    private final AccountRepo accountRepo;
+    private final TransactionRepository transactionRepo;
+    private final AccountRepository accountRepo;
     private final DateTimeFormatter dateTimeFormatter;
     
-    public ATMService(TransactionRepo transactionRepo, AccountRepo accountRepo) {
+    public ATMService(
+            TransactionRepository transactionRepo, 
+            AccountRepository accountRepo) {
+        
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
         dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");

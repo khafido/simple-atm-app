@@ -1,10 +1,10 @@
 package org.arkaan.simpleatm;
 
-import org.arkaan.simpleatm.datamodel.AccountRepo;
-import org.arkaan.simpleatm.datamodel.TransactionRepo;
 import org.arkaan.simpleatm.util.Pair;
 import org.arkaan.simpleatm.datamodel.Transaction;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
+import org.arkaan.simpleatm.repository.AccountRepo;
+import org.arkaan.simpleatm.repository.TransactionRepo;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +37,9 @@ class SimpleAtm {
     }
 
     void authenticate() {
+        System.out.println("===========================");
+        System.out.println("||          ATM          ||");
+        System.out.println("===========================");
         System.out.println("Enter your account number:");
         String account = stdIn.next();
         if (!validateAuth(account, "Account Number")) return;
@@ -259,7 +262,7 @@ public class App {
             }
             
             trxCsvPath = trxCsv.getPath();
-            System.out.println("Transaction history file: " + trxCsvPath);
+            System.out.println("Transaction history file: " + trxCsvPath + "\n");
             transactionRepo = new TransactionRepo(trxCsvPath);
         }
         
