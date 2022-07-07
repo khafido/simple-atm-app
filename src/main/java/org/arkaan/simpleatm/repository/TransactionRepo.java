@@ -12,17 +12,19 @@ import org.arkaan.simpleatm.datamodel.Transaction;
 import org.arkaan.simpleatm.datamodel.Type;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
 
-public class TransactionRepo extends CsvRepository<Transaction> 
-        implements Repository.TransactionRepository {
-    
+public class TransactionRepo implements Repository.TransactionRepository {
+
+    private final String csvPath;
+    private final List<Transaction> data;
     public TransactionRepo(String csvPath) {
-        super(new ArrayList<>(), csvPath);
+        this.csvPath = csvPath;
+        data = new ArrayList<>();
+        initData();
     }
     
     // type, detail, status, account number
-    
-    @Override
-    protected void initData(String csvPath) {
+
+    protected void initData() {
         try (FileReader fileReader = new FileReader(csvPath)) {
             BufferedReader reader = new BufferedReader(fileReader);
             while (reader.ready()) {
@@ -70,5 +72,10 @@ public class TransactionRepo extends CsvRepository<Transaction>
         return data.stream()
                 .filter(it -> it.getAccountNumber() == accountNumber)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveAll() {
+        saveToCsv(csvPath, data);
     }
 }

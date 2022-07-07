@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm;
+package org.arkaan.simpleatm.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,10 +9,12 @@ import java.util.Optional;
 import org.arkaan.simpleatm.datamodel.Account;
 import org.arkaan.simpleatm.datamodel.Transaction;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
+import org.arkaan.simpleatm.dto.Response;
+import org.arkaan.simpleatm.dto.TransferDto;
+import org.arkaan.simpleatm.dto.WithdrawDto;
 import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 import org.arkaan.simpleatm.repository.Repository.TransactionRepository;
 import org.arkaan.simpleatm.datamodel.Type;
-import org.arkaan.simpleatm.util.Pair;
 
 public class ATMService {
     
@@ -26,7 +28,7 @@ public class ATMService {
         
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
-        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     }
     
     public boolean authenticate(int accountNumber, int pin) {
@@ -41,28 +43,29 @@ public class ATMService {
         return result;
     }
     
-    public Status withdraw(int accountNumber, int amount) {
+    public Response withdraw(int accountNumber, int amount) {
         Optional<Account> account = accountRepo.findOne(accountNumber);
         Status status = Status.FAILED;
-        
+        String detail = "Account not found.";
+        Object payload = null;
+
         if (account.isPresent()) {
             Account principal = account.get();
-            String detail;
             String date = LocalDateTime.now().format(dateTimeFormatter);
             if (amount > principal.getBalance()) {
                 detail = String.format("Insufficient balance: $%d [%s]", amount, date);
-                System.out.println(detail);
             } else {
                 principal.reduceBalance(amount);
                 status = Status.SUCCESS;
                 detail = String.format("Amount: $%d [%s]", amount, date);
-                System.out.printf("Withdrawn: $%d [%s] %n", amount, date);
+                payload = new WithdrawDto(date, amount, principal.getBalance());
             }
+
             transactionRepo.save(new Transaction(
                     Type.WITHDRAWAL, detail, status, accountNumber));
         }
         
-        return status;
+        return new Response(status, detail, payload);
     }
     
     public Status deposit(int accountNumber, int amount) {
@@ -85,12 +88,13 @@ public class ATMService {
         return status;
     }
     
-    public Pair<Status, String> transfer(int accountNumber, int destination, int amount, String ref) {
+    public Response transfer(int accountNumber, int destination, int amount, String ref) {
         Optional<Account> account = accountRepo.findOne(accountNumber);
         Optional<Account> dest = accountRepo.findOne(destination);
         
         Status status = Status.FAILED;
-        String msg = "Transfer failed.\n";
+        String msg = "Account not found.";
+        Object payload = null;
         
         if (account.isPresent() && dest.isPresent()) {
             Account sender = account.get();
@@ -100,9 +104,9 @@ public class ATMService {
             if (sender.getBalance() > amount) {
                 sender.reduceBalance(amount);
                 receiver.addBalance(amount);
-                String senderDetail = String.format("Destination: xxx%.3d. Amount: $%d. Ref: %s. [%s]",
+                String senderDetail = String.format("Destination: %d. Amount: $%d. Ref: %s. [%s]",
                         destination, amount, ref, date);
-                String receiverDetail = String.format("From: xxx%.3d. Amount: $%d. Ref: %s. [%s]",
+                String receiverDetail = String.format("From: %d. Amount: $%d. Ref: %s. [%s]",
                         accountNumber, amount, ref, date);
                 
                 status = Status.SUCCESS;
@@ -111,44 +115,35 @@ public class ATMService {
                         Type.TRANSFER, senderDetail, status, accountNumber));
                 transactionRepo.save(new Transaction(
                         Type.TRANSFER, receiverDetail, status, destination));
-                
-                msg = String.format("Transfer Summary (%s) %nDestination account\t: %s %nAmount\t\t\t: $%s %nRef. Number\t\t: %s %nBalance\t\t\t: $%d %n",
-                        date, destination, amount, ref, sender.getBalance());
+                payload = new TransferDto(destination, amount, ref, sender.getBalance(), date);
+                msg = "Transfer Success.";
             } else {
-                String detail = String.format("Insufficient balance: $%d [%s]", amount, date);
-                System.out.println(detail);
-                
+                msg = String.format("Insufficient balance: $%d [%s]", amount, date);
                 transactionRepo.save(new Transaction(
-                        Type.TRANSFER, detail, status, accountNumber));
+                        Type.TRANSFER, msg, status, accountNumber));
             }
         }
         
-        return new Pair<Status, String>(status, msg);
+        return new Response(status, msg, payload);
     }
     
-    public void displayTransactionHistory(int accountNumber) {
+    public Response getTransactionHistory(int accountNumber) {
         Optional<Account> account = accountRepo.findOne(accountNumber);
-        if (!account.isPresent()) {
-            System.out.println("Account not found");
-            return;
+        String msg = "Account not found";
+        Object payload = null;
+        Status status = Status.FAILED;
+
+        if (account.isPresent()) {
+            List<Transaction> transactionList = transactionRepo.findByAccountNumber(accountNumber);
+            int length = transactionList.size();
+            if (length > 10) transactionList = transactionList.subList(length - 10, length);
+            Collections.reverse(transactionList);
+            payload = transactionList;
+            status = Status.SUCCESS;
+            msg = "Success";
         }
-        
-        System.out.println("===================\nTransaction History\n");
-        System.out.printf("%-5s %-15s %-10s %s %n", "NO", "TYPE", "STATUS", "DETAIL");
-        
-        List<Transaction> transactionList = transactionRepo.findByAccountNumber(accountNumber);
-        int length = transactionList.size();
-        
-        if (length > 10) transactionList = transactionList.subList(length - 10, length);
-        
-        Collections.reverse(transactionList);
-        
-        int i = 1;
-        
-        for (Transaction tr : transactionList) {
-            System.out.printf("%-5s %-15s %-10s %s %n", i++, tr.getType(), tr.getStatus(), tr.getDetail());
-        }
-        System.out.println();
+
+        return new Response(status, msg, payload);
     }
     
     public int getAccountBalance(int accountNumber) {
@@ -160,7 +155,7 @@ public class ATMService {
         return account.get().getBalance();
     }
     
-    public void saveToFile() {
+    public void saveAll() {
         accountRepo.saveAll();
         transactionRepo.saveAll();
     }

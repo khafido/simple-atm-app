@@ -59,6 +59,6 @@ public class Account {
     
     @Override
     public String toString() {
-        return String.join(",", name, String.valueOf(pin), String.valueOf(balance), String.valueOf(accountNumber));
+        return String.join(",", name, String.valueOf(pin), String.valueOf(balance), String.valueOf(accountNumber), "\n");
     }
 }

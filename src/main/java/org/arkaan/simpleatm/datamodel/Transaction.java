@@ -1,8 +1,8 @@
 package org.arkaan.simpleatm.datamodel;
 
 public class Transaction {
-    
-    private static int increment = 0;
+
+    private volatile int increment;
 
     public enum Status {
         SUCCESS,
@@ -16,11 +16,13 @@ public class Transaction {
     private final int accountNumber;
 
     public Transaction(Type type, String detail, Status status, int accountNumber) {
-        this.type = type;
-        this.detail = detail;
-        id = increment++;
-        this.status = status;
-        this.accountNumber = accountNumber;
+        synchronized (this) {
+            this.type = type;
+            this.detail = detail;
+            this.status = status;
+            this.accountNumber = accountNumber;
+            id = increment++;
+        }
     }
 
     public Integer getId() {
@@ -45,6 +47,6 @@ public class Transaction {
     
     @Override
     public String toString() {
-        return String.join(",", type.toString(), detail, status.toString(), String.valueOf(accountNumber));
+        return String.join(",", type.toString(), detail, status.toString(), String.valueOf(accountNumber), "\n");
     }
 }
