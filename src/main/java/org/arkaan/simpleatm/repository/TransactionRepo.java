@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.arkaan.simpleatm.datamodel.Transaction;
 import org.arkaan.simpleatm.datamodel.Type;
 import org.arkaan.simpleatm.datamodel.Transaction.Status;
+import org.arkaan.simpleatm.util.Helper;
 
 public class TransactionRepo implements Repository.TransactionRepository {
 
@@ -30,6 +31,7 @@ public class TransactionRepo implements Repository.TransactionRepository {
             while (reader.ready()) {
                 String[] row = reader.readLine().split(",");
                 save(new Transaction(
+                        Helper.nextTransactionId(),
                         Type.valueOf(row[0]),
                         row[1], Status.valueOf(row[2]),
                         Integer.parseInt(row[3])));

@@ -196,14 +196,13 @@ public class AtmUI {
         if (result.getStatus() == Status.FAILED) {
             System.out.println(result.getMsg());
         } else {
-            int i = 1;
             List<?> transactionList = (List<?>) result.getPayload();
             System.out.println("===================\nTransaction History\n");
-            System.out.printf("%-5s %-15s %-10s %s %n", "NO", "TYPE", "STATUS", "DETAIL");
+            System.out.printf("%-10s %-15s %-10s %s %n", "ID", "TYPE", "STATUS", "DETAIL");
             for (Object t : transactionList) {
                 if (t instanceof Transaction) {
                     Transaction tr = (Transaction) t;
-                    System.out.printf("%-5s %-15s %-10s %s %n", i++, tr.getType(), tr.getStatus(), tr.getDetail());
+                    System.out.printf("%-10s %-15s %-10s %s %n", tr.getId(), tr.getType(), tr.getStatus(), tr.getDetail());
                 }
             }
             System.out.println();

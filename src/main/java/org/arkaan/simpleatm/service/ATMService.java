@@ -15,6 +15,7 @@ import org.arkaan.simpleatm.dto.WithdrawDto;
 import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 import org.arkaan.simpleatm.repository.Repository.TransactionRepository;
 import org.arkaan.simpleatm.datamodel.Type;
+import org.arkaan.simpleatm.util.Helper;
 
 public class ATMService {
     
@@ -62,7 +63,8 @@ public class ATMService {
             }
 
             transactionRepo.save(new Transaction(
-                    Type.WITHDRAWAL, detail, status, accountNumber));
+                    Helper.nextTransactionId(), Type.WITHDRAWAL, detail, status, accountNumber));
+
         }
         
         return new Response(status, detail, payload);
@@ -80,7 +82,7 @@ public class ATMService {
             String detail = String.format("Amount: $%d [%s]", amount, date);
             
             transactionRepo.save(new Transaction(
-                    Type.DEPOSIT, detail, status, accountNumber));
+                    Helper.nextTransactionId(), Type.DEPOSIT, detail, status, accountNumber));
         } else {
             System.out.println("Account not found");
         }
@@ -112,15 +114,15 @@ public class ATMService {
                 status = Status.SUCCESS;
                 
                 transactionRepo.save(new Transaction(
-                        Type.TRANSFER, senderDetail, status, accountNumber));
+                        Helper.nextTransactionId(), Type.TRANSFER, senderDetail, status, accountNumber));
                 transactionRepo.save(new Transaction(
-                        Type.TRANSFER, receiverDetail, status, destination));
+                        Helper.nextTransactionId(), Type.TRANSFER, receiverDetail, status, destination));
                 payload = new TransferDto(destination, amount, ref, sender.getBalance(), date);
                 msg = "Transfer Success.";
             } else {
                 msg = String.format("Insufficient balance: $%d [%s]", amount, date);
                 transactionRepo.save(new Transaction(
-                        Type.TRANSFER, msg, status, accountNumber));
+                        Helper.nextTransactionId(), Type.TRANSFER, msg, status, accountNumber));
             }
         }
         

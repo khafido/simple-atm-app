@@ -2,8 +2,6 @@ package org.arkaan.simpleatm.datamodel;
 
 public class Transaction {
 
-    private volatile int increment;
-
     public enum Status {
         SUCCESS,
         FAILED
@@ -15,14 +13,12 @@ public class Transaction {
     private final Status status;
     private final int accountNumber;
 
-    public Transaction(Type type, String detail, Status status, int accountNumber) {
-        synchronized (this) {
-            this.type = type;
-            this.detail = detail;
-            this.status = status;
-            this.accountNumber = accountNumber;
-            id = increment++;
-        }
+    public Transaction(int id, Type type, String detail, Status status, int accountNumber) {
+        this.type = type;
+        this.detail = detail;
+        this.status = status;
+        this.accountNumber = accountNumber;
+        this.id = id;
     }
 
     public Integer getId() {
