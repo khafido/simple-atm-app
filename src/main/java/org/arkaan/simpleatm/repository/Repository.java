@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.arkaan.simpleatm.datamodel.Account;
-import org.arkaan.simpleatm.datamodel.Transaction;
+import org.arkaan.simpleatm.model.Account;
+import org.arkaan.simpleatm.model.Transaction;
 
 public interface Repository<T> {
     Optional<T> findOne(int id);

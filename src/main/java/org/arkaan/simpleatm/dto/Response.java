@@ -1,6 +1,6 @@
 package org.arkaan.simpleatm.dto;
 
-import static org.arkaan.simpleatm.datamodel.Transaction.Status;
+import static org.arkaan.simpleatm.model.Transaction.Status;
 
 public class Response {
     private final Status status;

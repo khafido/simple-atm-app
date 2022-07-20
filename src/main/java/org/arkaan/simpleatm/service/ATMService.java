@@ -6,15 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.arkaan.simpleatm.datamodel.Account;
-import org.arkaan.simpleatm.datamodel.Transaction;
-import org.arkaan.simpleatm.datamodel.Transaction.Status;
+import org.arkaan.simpleatm.model.Account;
+import org.arkaan.simpleatm.model.Transaction;
+import org.arkaan.simpleatm.model.Transaction.Status;
 import org.arkaan.simpleatm.dto.Response;
 import org.arkaan.simpleatm.dto.TransferDto;
 import org.arkaan.simpleatm.dto.WithdrawDto;
 import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 import org.arkaan.simpleatm.repository.Repository.TransactionRepository;
-import org.arkaan.simpleatm.datamodel.Type;
+import org.arkaan.simpleatm.model.Type;
 import org.arkaan.simpleatm.util.Helper;
 
 public class ATMService {

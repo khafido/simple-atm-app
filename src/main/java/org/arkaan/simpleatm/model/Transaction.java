@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm.datamodel;
+package org.arkaan.simpleatm.model;
 
 public class Transaction {
 

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.arkaan.simpleatm.datamodel.Transaction;
-import org.arkaan.simpleatm.datamodel.Type;
-import org.arkaan.simpleatm.datamodel.Transaction.Status;
+import org.arkaan.simpleatm.model.Transaction;
+import org.arkaan.simpleatm.model.Type;
+import org.arkaan.simpleatm.model.Transaction.Status;
 import org.arkaan.simpleatm.util.Helper;
 
 public class TransactionRepo implements Repository.TransactionRepository {

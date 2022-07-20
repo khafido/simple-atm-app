@@ -3,7 +3,7 @@ package org.arkaan.simpleatm;
 import org.arkaan.simpleatm.repository.AccountRepo;
 import org.arkaan.simpleatm.repository.TransactionRepo;
 import org.arkaan.simpleatm.service.ATMService;
-import org.arkaan.simpleatm.ui.AtmUI;
+import org.arkaan.simpleatm.controller.AtmController;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class App {
         
         ATMService atmService = new ATMService(transactionRepo, accountRepo);
         
-        AtmUI atm = new AtmUI(atmService);
+        AtmController atm = new AtmController(atmService);
 
         do {
             try {                
@@ -64,6 +64,6 @@ public class App {
                 System.out.println("Exit..");
                 System.exit(0);
             }
-        } while (atm.getState() != AtmUI.State.OFFLINE);
+        } while (atm.getState() != AtmController.State.OFFLINE);
     }
 }

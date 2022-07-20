@@ -1,20 +1,20 @@
-package org.arkaan.simpleatm.ui;
+package org.arkaan.simpleatm.controller;
 
 import org.arkaan.simpleatm.dto.Response;
 import org.arkaan.simpleatm.dto.TransferDto;
 import org.arkaan.simpleatm.dto.WithdrawDto;
 import org.arkaan.simpleatm.service.ATMService;
 import org.arkaan.simpleatm.util.Constant;
-import org.arkaan.simpleatm.datamodel.Transaction;
+import org.arkaan.simpleatm.model.Transaction;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 import static org.arkaan.simpleatm.util.Helper.*;
-import static org.arkaan.simpleatm.datamodel.Transaction.Status;
+import static org.arkaan.simpleatm.model.Transaction.Status;
 
-public class AtmUI {
+public class AtmController {
     public enum State {
         AUTHENTICATED,
         IDLE,
@@ -27,7 +27,7 @@ public class AtmUI {
     private final ATMService atmService;
     private int currentAccount;
 
-    public AtmUI(ATMService atmService) {
+    public AtmController(ATMService atmService) {
         state = State.IDLE;
         stdIn = new Scanner(System.in);
         random = new Random();

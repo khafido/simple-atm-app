@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.arkaan.simpleatm.datamodel.Account;
+import org.arkaan.simpleatm.model.Account;
 import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
 
 public class AccountRepo implements Repository.AccountRepository {
