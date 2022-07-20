@@ -1,13 +1,31 @@
 package org.arkaan.simpleatm.model;
 
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "accounts")
 public class Account {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
     private final int accountNumber;
+
+    @Column(nullable = false)
     private final int pin;
+
+    @Column(nullable = false)
     private final String name;
+
+    @Column(nullable = false)
     private int balance;
+
+    @OneToMany(mappedBy = "account")
+    private List<Transaction> transactions;
 
     public Account(int accountNumber, int pin, String name, int balance) {
         this.name = name;
@@ -39,7 +57,15 @@ public class Account {
     public int getPin() {
         return pin;
     }
-    
+
+    public int getId() {
+        return id;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(accountNumber);

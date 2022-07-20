@@ -1,17 +1,36 @@
 package org.arkaan.simpleatm.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "transactions")
 public class Transaction {
 
     public enum Status {
         SUCCESS,
         FAILED
     }
-    
-    private final Integer id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final int id;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private final Type type;
+
+    @Column(nullable = false)
     private final String detail;
+
+    @Column(nullable = false)
     private final Status status;
+
+    @Transient
     private final int accountNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
     public Transaction(int id, Type type, String detail, Status status, int accountNumber) {
         this.type = type;
