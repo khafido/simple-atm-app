@@ -13,24 +13,26 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final int id;
+    private int id;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private final Type type;
+    private Type type;
 
     @Column(nullable = false)
-    private final String detail;
+    private String detail;
 
     @Column(nullable = false)
-    private final Status status;
+    private Status status;
 
     @Transient
-    private final int accountNumber;
+    private  int accountNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+
+    public Transaction() {}
 
     public Transaction(int id, Type type, String detail, Status status, int accountNumber) {
         this.type = type;

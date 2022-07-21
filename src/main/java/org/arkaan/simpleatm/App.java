@@ -5,20 +5,25 @@ import org.arkaan.simpleatm.repository.TransactionRepo;
 import org.arkaan.simpleatm.service.ATMService;
 import org.arkaan.simpleatm.controller.AtmController;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 
 @SpringBootApplication
 public class App {
     
     public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
+        Map<String, Object> properties = new HashMap<>();
+
+        new SpringApplicationBuilder(App.class)
+                .properties(properties)
+                .build()
+                .run(args);
     }
 
     @Bean

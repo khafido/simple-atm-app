@@ -13,19 +13,21 @@ public class Account {
     private int id;
 
     @Column(nullable = false)
-    private final int accountNumber;
+    private int accountNumber;
 
     @Column(nullable = false)
-    private final int pin;
+    private int pin;
 
     @Column(nullable = false)
-    private final String name;
+    private String name;
 
     @Column(nullable = false)
     private int balance;
 
     @OneToMany(mappedBy = "account")
     private List<Transaction> transactions;
+
+    public Account() {}
 
     public Account(int accountNumber, int pin, String name, int balance) {
         this.name = name;
