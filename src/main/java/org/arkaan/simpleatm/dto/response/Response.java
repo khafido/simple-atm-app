@@ -1,13 +1,13 @@
-package org.arkaan.simpleatm.dto;
+package org.arkaan.simpleatm.dto.response;
 
-import static org.arkaan.simpleatm.model.Transaction.Status;
+import org.arkaan.simpleatm.model.Status;
 
-public class Response {
+public class Response<T> {
     private final Status status;
     private final String msg;
-    private final Object payload;
+    private final T payload;
 
-    public Response(Status status, String msg, Object payload) {
+    public Response(Status status, String msg, T payload) {
         this.status = status;
         this.msg = msg;
         this.payload = payload;
@@ -17,7 +17,7 @@ public class Response {
         return msg;
     }
 
-    public Object getPayload() {
+    public T getPayload() {
         return payload;
     }
 

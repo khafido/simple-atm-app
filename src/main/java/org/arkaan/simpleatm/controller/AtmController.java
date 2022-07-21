@@ -1,18 +1,18 @@
 package org.arkaan.simpleatm.controller;
 
-import org.arkaan.simpleatm.dto.Response;
-import org.arkaan.simpleatm.dto.TransferDto;
-import org.arkaan.simpleatm.dto.WithdrawDto;
+import org.arkaan.simpleatm.dto.response.Response;
+import org.arkaan.simpleatm.dto.response.TransferDto;
+import org.arkaan.simpleatm.dto.response.WithdrawDto;
 import org.arkaan.simpleatm.service.ATMService;
 import org.arkaan.simpleatm.util.Constant;
 import org.arkaan.simpleatm.model.Transaction;
+import org.arkaan.simpleatm.model.Status;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 import static org.arkaan.simpleatm.util.Helper.*;
-import static org.arkaan.simpleatm.model.Transaction.Status;
 
 public class AtmController {
     public enum State {
@@ -103,11 +103,11 @@ public class AtmController {
             amount = amountList[amountSelect - 1];
         }
 
-        Response result = atmService.withdraw(currentAccount, amount);
+        Response<WithdrawDto> result = atmService.withdraw(currentAccount, amount);
         if (result.getStatus() == Status.FAILED) {
             System.out.println(result.getMsg());
         } else {
-            WithdrawDto payload = (WithdrawDto) result.getPayload();
+            WithdrawDto payload = result.getPayload();
             System.out.printf("Summary%nDate : %s%nWithdraw : $%d%nBalance: $%d%n%n",
                     payload.getDate(), payload.getAmount(), payload.getBalance());
         }
@@ -119,9 +119,9 @@ public class AtmController {
         System.out.println("==============\n1. $10\n2. $50\n3. $100\n4. Other\n5. Back\n");
         int amount = stdIn.nextInt();
         try {
-            Transaction.Status status = atmService
+            Status status = atmService
                     .deposit(currentAccount, amountList[amount - 1]);
-            if (status == Transaction.Status.FAILED) {
+            if (status == Status.FAILED) {
                 System.out.println("Deposit failed.");
             } else {
                 System.out.println("Deposit success.");
@@ -175,13 +175,13 @@ public class AtmController {
             return true;
         }
 
-        Response result = atmService.transfer(
+        Response<TransferDto> result = atmService.transfer(
                 currentAccount, Integer.parseInt(destinationInput), amount, ref);
 
-        if (result.getStatus() == Transaction.Status.FAILED) {
+        if (result.getStatus() == Status.FAILED) {
             System.out.println(result.getMsg());
         } else {
-            TransferDto payload = (TransferDto) result.getPayload();
+            TransferDto payload = result.getPayload();
             String summary = String.format("Fund Transfer Summary (%s) %nDestination account\t: %s %nAmount\t\t\t: $%s %nRef. Number\t\t: %s %nBalance\t\t\t: $%d %n",
                     payload.getDate(), payload.getDestination(), amount, ref, payload.getBalance());
             System.out.println(summary);
@@ -191,12 +191,12 @@ public class AtmController {
     }
 
     private boolean viewTransactionHistory() {
-        Response result = atmService.getTransactionHistory(currentAccount);
+        Response<List<Transaction>> result = atmService.getTransactionHistory(currentAccount);
 
         if (result.getStatus() == Status.FAILED) {
             System.out.println(result.getMsg());
         } else {
-            List<?> transactionList = (List<?>) result.getPayload();
+            List<?> transactionList = result.getPayload();
             System.out.println("===================\nTransaction History\n");
             System.out.printf("%-10s %-15s %-10s %s %n", "ID", "TYPE", "STATUS", "DETAIL");
             for (Object t : transactionList) {

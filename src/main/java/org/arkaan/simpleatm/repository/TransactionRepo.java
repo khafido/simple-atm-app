@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import org.arkaan.simpleatm.model.Transaction;
 import org.arkaan.simpleatm.model.Type;
-import org.arkaan.simpleatm.model.Transaction.Status;
+import org.arkaan.simpleatm.model.Status;
 import org.arkaan.simpleatm.util.Helper;
 
 public class TransactionRepo implements Repository.TransactionRepository {
@@ -56,11 +56,6 @@ public class TransactionRepo implements Repository.TransactionRepository {
     public Transaction save(Transaction newTransaction) {
         data.add(newTransaction);
         return newTransaction;
-    }
-    
-    @Override
-    public Transaction update(int id, Transaction newData) {
-        return null;
     }
     
 

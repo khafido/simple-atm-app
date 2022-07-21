@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm.util;
+package org.arkaan.simpleatm.error;
 
 public class DuplicateAccountNumberException extends RuntimeException {
 

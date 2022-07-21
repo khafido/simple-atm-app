@@ -12,7 +12,6 @@ import org.arkaan.simpleatm.model.Transaction;
 public interface Repository<T> {
     Optional<T> findOne(int id);
     T save(T data);
-    T update(int id, T data);
     T remove(int id);
     void saveAll();
 

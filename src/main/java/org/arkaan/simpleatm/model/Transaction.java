@@ -1,15 +1,11 @@
 package org.arkaan.simpleatm.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transactions")
 public class Transaction {
-
-    public enum Status {
-        SUCCESS,
-        FAILED
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +24,23 @@ public class Transaction {
     @Transient
     private  int accountNumber;
 
+    @Column(nullable = false)
+    private LocalDate date;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+
     public Transaction() {}
+
+    public Transaction(Type type, String detail, Status status, LocalDate date, Account account) {
+        this.type = type;
+        this.detail = detail;
+        this.status = status;
+        this.date = date;
+        this.account = account;
+    }
 
     public Transaction(int id, Type type, String detail, Status status, int accountNumber) {
         this.type = type;
@@ -61,7 +69,15 @@ public class Transaction {
     public int getAccountNumber() {
         return accountNumber;
     }
-    
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
     @Override
     public String toString() {
         return String.join(",", type.toString(), detail, status.toString(), String.valueOf(accountNumber), "\n");

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.arkaan.simpleatm.model.Account;
-import org.arkaan.simpleatm.util.DuplicateAccountNumberException;
+import org.arkaan.simpleatm.error.DuplicateAccountNumberException;
 
 public class AccountRepo implements Repository.AccountRepository {
     // name, pin, balance, account number
@@ -65,11 +65,6 @@ public class AccountRepo implements Repository.AccountRepository {
             throw new DuplicateAccountNumberException(newAccount.getAccountNumber());
         }
         return newAccount;
-    }
-
-    @Override
-    public Account update(int id, Account data) {
-        return null;
     }
 
     @Override

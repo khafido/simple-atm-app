@@ -8,10 +8,10 @@ import java.util.Optional;
 
 import org.arkaan.simpleatm.model.Account;
 import org.arkaan.simpleatm.model.Transaction;
-import org.arkaan.simpleatm.model.Transaction.Status;
-import org.arkaan.simpleatm.dto.Response;
-import org.arkaan.simpleatm.dto.TransferDto;
-import org.arkaan.simpleatm.dto.WithdrawDto;
+import org.arkaan.simpleatm.model.Status;
+import org.arkaan.simpleatm.dto.response.Response;
+import org.arkaan.simpleatm.dto.response.TransferDto;
+import org.arkaan.simpleatm.dto.response.WithdrawDto;
 import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 import org.arkaan.simpleatm.repository.Repository.TransactionRepository;
 import org.arkaan.simpleatm.model.Type;
@@ -44,11 +44,11 @@ public class ATMService {
         return result;
     }
     
-    public Response withdraw(int accountNumber, int amount) {
+    public Response<WithdrawDto> withdraw(int accountNumber, int amount) {
         Optional<Account> account = accountRepo.findOne(accountNumber);
         Status status = Status.FAILED;
         String detail = "Account not found.";
-        Object payload = null;
+        WithdrawDto payload = null;
 
         if (account.isPresent()) {
             Account principal = account.get();
@@ -67,7 +67,7 @@ public class ATMService {
 
         }
         
-        return new Response(status, detail, payload);
+        return new Response<>(status, detail, payload);
     }
     
     public Status deposit(int accountNumber, int amount) {
@@ -90,13 +90,13 @@ public class ATMService {
         return status;
     }
     
-    public Response transfer(int accountNumber, int destination, int amount, String ref) {
+    public Response<TransferDto> transfer(int accountNumber, int destination, int amount, String ref) {
         Optional<Account> account = accountRepo.findOne(accountNumber);
         Optional<Account> dest = accountRepo.findOne(destination);
         
         Status status = Status.FAILED;
         String msg = "Account not found.";
-        Object payload = null;
+        TransferDto payload = null;
         
         if (account.isPresent() && dest.isPresent()) {
             Account sender = account.get();
@@ -126,13 +126,13 @@ public class ATMService {
             }
         }
         
-        return new Response(status, msg, payload);
+        return new Response<>(status, msg, payload);
     }
     
-    public Response getTransactionHistory(int accountNumber) {
+    public Response<List<Transaction>> getTransactionHistory(int accountNumber) {
         Optional<Account> account = accountRepo.findOne(accountNumber);
         String msg = "Account not found";
-        Object payload = null;
+        List<Transaction> payload = null;
         Status status = Status.FAILED;
 
         if (account.isPresent()) {
@@ -145,7 +145,7 @@ public class ATMService {
             msg = "Success";
         }
 
-        return new Response(status, msg, payload);
+        return new Response<>(status, msg, payload);
     }
     
     public int getAccountBalance(int accountNumber) {

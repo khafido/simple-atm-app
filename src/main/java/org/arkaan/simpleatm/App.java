@@ -1,22 +1,25 @@
 package org.arkaan.simpleatm;
 
-import org.arkaan.simpleatm.repository.AccountRepo;
-import org.arkaan.simpleatm.repository.TransactionRepo;
-import org.arkaan.simpleatm.service.ATMService;
-import org.arkaan.simpleatm.controller.AtmController;
+import org.arkaan.simpleatm.controller.AccountController;
+import org.arkaan.simpleatm.dto.request.AuthDto;
+import org.arkaan.simpleatm.dto.response.AccountDto;
+import org.arkaan.simpleatm.dto.response.Response;
+import org.arkaan.simpleatm.model.Account;
+import org.arkaan.simpleatm.model.Status;
+import org.arkaan.simpleatm.repository.Repository.*;
+import org.arkaan.simpleatm.service.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 
 @SpringBootApplication
 public class App {
-    
+
     public static void main(String[] args) {
         Map<String, Object> properties = new HashMap<>();
 
@@ -27,60 +30,22 @@ public class App {
     }
 
     @Bean
-    public CommandLineRunner runner() {
+    public CommandLineRunner runner(ApplicationContext context) {
         return args -> {
-            AccountRepo accountRepo;
-            TransactionRepo transactionRepo;
+            AccountController accountController = context.getBean(AccountController.class);
 
-            if (args.length == 0) {
-                System.out.println("Please provide csv file");
-                return;
+            AuthDto authDto = new AuthDto(776643, 123456);
+
+            System.out.println("test login");
+            Thread.sleep(2000);
+
+            Response<AccountDto> authenticate = accountController.authenticate(authDto);
+
+            if (authenticate.getStatus() == Status.SUCCESS) {
+                System.out.println("wow you're in");
             } else {
-                accountRepo = new AccountRepo(args[0]);
-
-                File resource = new File(System.getProperty("user.home") + "/atm-simulation");
-                String trxCsvPath;
-
-                if (!resource.exists()) {
-                    resource.mkdir();
-                }
-
-                File trxCsv = new File(resource.getPath() + "/transactions.csv");
-                try {
-                    trxCsv.createNewFile();
-                } catch (IOException e) {
-                    System.out.println("Failed to create file");
-                }
-
-                trxCsvPath = trxCsv.getPath();
-                System.out.println("Transaction history file: " + trxCsvPath + "\n");
-                transactionRepo = new TransactionRepo(trxCsvPath);
+                System.out.println(authenticate.getMsg());
             }
-
-            ATMService atmService = new ATMService(transactionRepo, accountRepo);
-
-            AtmController atm = new AtmController(atmService);
-
-            do {
-                try {
-                    switch (atm.getState()) {
-                        case IDLE: {
-                            atm.authenticate();
-                            break;
-                        }
-                        case AUTHENTICATED: {
-                            atm.displayMenu();
-                            break;
-                        }
-                        case OFFLINE: {
-                            break;
-                        }
-                    }
-                } catch (NoSuchElementException e) {
-                    System.out.println("Exit..");
-                    System.exit(0);
-                }
-            } while (atm.getState() != AtmController.State.OFFLINE);
         };
     }
 }

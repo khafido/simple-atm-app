@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm.dto;
+package org.arkaan.simpleatm.dto.response;
 
 public class WithdrawDto {
     private final String date;

@@ -1,4 +1,4 @@
-package org.arkaan.simpleatm.dto;
+package org.arkaan.simpleatm.dto.response;
 
 public class TransferDto {
     private final int destination;
