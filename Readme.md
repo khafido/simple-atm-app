@@ -11,16 +11,14 @@
 
 <p>Default accounts can be found in <code>resources/accounts.csv</code></p>
 <p>Formatted as: <small>[Name,PIN,Balance,Account Number]</small><p>
-<p>I.e.</e>
+<p>I.e.</p>
 <p>Carree,123456,798,776643</p>
 <p>Merrie,844831,891,774921</p>
 <p>Caressa,968661,604,777106</p>
 <p>...</p>
 
-<h5>Or pass a CSV file as argument</h5>
-
+<h3>Compile</h3>
+<code>mvn clean package spring-boot:repackage</code>
+<br>
 <h3>Run</h3>
-<code>mvn clean package</code>
-<br>
-<br>
-<code>java -jar target/simple-atm-app.jar [path-to-csv]</code>
+<code>java -jar target/simple-atm-app.jar --DATASOURCE_URL=your_postgresql_jdbc_url --DATASOURCE_USER=your_postgresql_user --DATASOURCE_PASSWORD=your_postgresql_password</code>

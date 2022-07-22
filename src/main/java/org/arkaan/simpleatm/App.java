@@ -4,6 +4,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.arkaan.simpleatm.controller.AccountController;
+import org.arkaan.simpleatm.controller.IndexController;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +18,6 @@ public class App {
 
     public static void main(String[] args) throws LifecycleException {
         Map<String, Object> properties = new HashMap<>();
-
         ApplicationContext context = new SpringApplicationBuilder(App.class)
                 .properties(properties)
                 .build()
@@ -30,13 +30,17 @@ public class App {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(8082);
 
-        Context webapp = tomcat.addWebapp("", new File(".").getAbsolutePath());
+        Context webapp = tomcat.addWebapp("", new File("src/main/webapp/").getAbsolutePath());
+
+        webapp.setParentClassLoader(App.class.getClassLoader());
 
         AccountController accountController = context.getBean(AccountController.class);
-
+        IndexController indexController = context.getBean(IndexController.class);
         tomcat.addServlet("", "AccountServlet", accountController);
+        tomcat.addServlet("", "index", indexController);
 
         webapp.addServletMappingDecoded("/account", "AccountServlet");
+        webapp.addServletMappingDecoded("", "index");
 
         tomcat.start();
         tomcat.getConnector();
