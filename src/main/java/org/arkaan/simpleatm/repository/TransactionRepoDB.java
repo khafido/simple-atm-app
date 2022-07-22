@@ -3,14 +3,13 @@ package org.arkaan.simpleatm.repository;
 import org.arkaan.simpleatm.error.AddTransactionException;
 import org.arkaan.simpleatm.model.Transaction;
 import org.arkaan.simpleatm.repository.Repository.TransactionRepository;
-
-import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TransactionRepoDB implements TransactionRepository {

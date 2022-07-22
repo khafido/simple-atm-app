@@ -1,14 +1,14 @@
 package org.arkaan.simpleatm.repository;
 
+import org.arkaan.simpleatm.error.DuplicateAccountNumberException;
+import org.arkaan.simpleatm.model.Account;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.arkaan.simpleatm.model.Account;
-import org.arkaan.simpleatm.error.DuplicateAccountNumberException;
 
 public class AccountRepo implements Repository.AccountRepository {
     // name, pin, balance, account number

@@ -2,9 +2,9 @@ package org.arkaan.simpleatm.repository;
 
 import org.arkaan.simpleatm.error.DuplicateAccountNumberException;
 import org.arkaan.simpleatm.model.Account;
+import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
-import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

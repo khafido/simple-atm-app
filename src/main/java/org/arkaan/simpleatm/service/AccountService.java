@@ -5,7 +5,7 @@ import org.arkaan.simpleatm.error.AuthenticationException;
 import org.arkaan.simpleatm.error.DuplicateAccountNumberException;
 import org.arkaan.simpleatm.error.NotFoundException;
 import org.arkaan.simpleatm.model.Account;
-import org.arkaan.simpleatm.repository.Repository.*;
+import org.arkaan.simpleatm.repository.Repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

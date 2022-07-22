@@ -1,51 +1,45 @@
 package org.arkaan.simpleatm;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.startup.Tomcat;
 import org.arkaan.simpleatm.controller.AccountController;
-import org.arkaan.simpleatm.dto.request.AuthDto;
-import org.arkaan.simpleatm.dto.response.AccountDto;
-import org.arkaan.simpleatm.dto.response.Response;
-import org.arkaan.simpleatm.model.Account;
-import org.arkaan.simpleatm.model.Status;
-import org.arkaan.simpleatm.repository.Repository.*;
-import org.arkaan.simpleatm.service.AccountService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-import java.util.*;
-
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws LifecycleException {
         Map<String, Object> properties = new HashMap<>();
 
-        new SpringApplicationBuilder(App.class)
+        ApplicationContext context = new SpringApplicationBuilder(App.class)
                 .properties(properties)
                 .build()
                 .run(args);
+
+        runTomcat(context);
     }
 
-    @Bean
-    public CommandLineRunner runner(ApplicationContext context) {
-        return args -> {
-            AccountController accountController = context.getBean(AccountController.class);
+    static void runTomcat(ApplicationContext context) throws LifecycleException {
+        Tomcat tomcat = new Tomcat();
+        tomcat.setPort(8082);
 
-            AuthDto authDto = new AuthDto(776643, 123456);
+        Context webapp = tomcat.addWebapp("", new File(".").getAbsolutePath());
 
-            System.out.println("test login");
-            Thread.sleep(2000);
+        AccountController accountController = context.getBean(AccountController.class);
 
-            Response<AccountDto> authenticate = accountController.authenticate(authDto);
+        tomcat.addServlet("", "AccountServlet", accountController);
 
-            if (authenticate.getStatus() == Status.SUCCESS) {
-                System.out.println("wow you're in");
-            } else {
-                System.out.println(authenticate.getMsg());
-            }
-        };
+        webapp.addServletMappingDecoded("/account", "AccountServlet");
+
+        tomcat.start();
+        tomcat.getConnector();
+        tomcat.getServer().await();
     }
 }

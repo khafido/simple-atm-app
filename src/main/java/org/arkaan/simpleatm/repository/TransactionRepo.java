@@ -1,5 +1,10 @@
 package org.arkaan.simpleatm.repository;
 
+import org.arkaan.simpleatm.model.Status;
+import org.arkaan.simpleatm.model.Transaction;
+import org.arkaan.simpleatm.model.Type;
+import org.arkaan.simpleatm.util.Helper;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,11 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.arkaan.simpleatm.model.Transaction;
-import org.arkaan.simpleatm.model.Type;
-import org.arkaan.simpleatm.model.Status;
-import org.arkaan.simpleatm.util.Helper;
 
 public class TransactionRepo implements Repository.TransactionRepository {
 

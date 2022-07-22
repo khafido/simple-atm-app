@@ -3,16 +3,17 @@ package org.arkaan.simpleatm.controller;
 import org.arkaan.simpleatm.dto.response.Response;
 import org.arkaan.simpleatm.dto.response.TransferDto;
 import org.arkaan.simpleatm.dto.response.WithdrawDto;
+import org.arkaan.simpleatm.model.Status;
+import org.arkaan.simpleatm.model.Transaction;
 import org.arkaan.simpleatm.service.ATMService;
 import org.arkaan.simpleatm.util.Constant;
-import org.arkaan.simpleatm.model.Transaction;
-import org.arkaan.simpleatm.model.Status;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import static org.arkaan.simpleatm.util.Helper.*;
+import static org.arkaan.simpleatm.util.Helper.isNotNumber;
+import static org.arkaan.simpleatm.util.Helper.isSixDigits;
 
 public class AtmController {
     public enum State {

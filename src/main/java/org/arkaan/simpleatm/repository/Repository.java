@@ -1,13 +1,13 @@
 package org.arkaan.simpleatm.repository;
 
+import org.arkaan.simpleatm.model.Account;
+import org.arkaan.simpleatm.model.Transaction;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import org.arkaan.simpleatm.model.Account;
-import org.arkaan.simpleatm.model.Transaction;
 
 public interface Repository<T> {
     Optional<T> findOne(int id);
