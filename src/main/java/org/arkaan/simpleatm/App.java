@@ -3,8 +3,12 @@ package org.arkaan.simpleatm;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
-import org.arkaan.simpleatm.controller.AccountController;
-import org.arkaan.simpleatm.controller.IndexController;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
+import org.arkaan.simpleatm.config.AuthFilter;
+import org.arkaan.simpleatm.controller.AccountServlet;
+import org.arkaan.simpleatm.controller.IndexServlet;
+import org.arkaan.simpleatm.controller.WithdrawServlet;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -34,13 +38,27 @@ public class App {
 
         webapp.setParentClassLoader(App.class.getClassLoader());
 
-        AccountController accountController = context.getBean(AccountController.class);
-        IndexController indexController = context.getBean(IndexController.class);
+        AccountServlet accountController = context.getBean(AccountServlet.class);
+        IndexServlet indexController = context.getBean(IndexServlet.class);
+        WithdrawServlet withdrawServlet = context.getBean(WithdrawServlet.class);
         tomcat.addServlet("", "AccountServlet", accountController);
         tomcat.addServlet("", "index", indexController);
+        tomcat.addServlet("", "WithdrawServlet", withdrawServlet);
 
         webapp.addServletMappingDecoded("/account", "AccountServlet");
         webapp.addServletMappingDecoded("", "index");
+        webapp.addServletMappingDecoded("/withdraw", "WithdrawServlet");
+        
+        FilterDef authFilter = new FilterDef();
+        authFilter.setFilterName("AUTH_FILTER");
+        authFilter.setFilterClass(AuthFilter.class.getName());
+        webapp.addFilterDef(authFilter);
+        
+        FilterMap filterMap = new FilterMap();
+        filterMap.addServletName("index");
+        filterMap.addServletName("WithdrawServlet");
+        filterMap.setFilterName("AUTH_FILTER");
+        webapp.addFilterMap(filterMap);
 
         tomcat.start();
         tomcat.getConnector();

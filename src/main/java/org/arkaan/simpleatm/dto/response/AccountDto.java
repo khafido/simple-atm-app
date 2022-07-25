@@ -4,12 +4,10 @@ public class AccountDto {
 
     private final int accountNumber;
     private final String name;
-    private final int balance;
 
-    public AccountDto(int accountNumber, String name, int balance) {
+    public AccountDto(int accountNumber, String name) {
         this.accountNumber = accountNumber;
         this.name = name;
-        this.balance = balance;
     }
 
     public int getAccountNumber() {
@@ -18,9 +16,5 @@ public class AccountDto {
 
     public String getName() {
         return name;
-    }
-
-    public int getBalance() {
-        return balance;
     }
 }

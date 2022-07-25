@@ -7,6 +7,6 @@ public final class Mapper {
 
     public static AccountDto mapAccountDto(Account account) {
         return new AccountDto(account.getAccountNumber(),
-                account.getName(), account.getBalance());
+                account.getName());
     }
 }

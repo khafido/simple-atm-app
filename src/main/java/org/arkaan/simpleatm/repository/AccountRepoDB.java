@@ -7,6 +7,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -25,10 +26,16 @@ public class AccountRepoDB implements AccountRepository {
     @Override
     public Optional<Account> findOne(int id) {
         em.getTransaction().begin();
-        Account account = em.createQuery("select a from Account a where a.accountNumber=:account_number", Account.class)
+        Account account;
+        try {
+            account = em.createQuery("select a from Account a where a.accountNumber=:account_number", Account.class)
                 .setParameter("account_number", id)
                 .getSingleResult();
-        em.getTransaction().commit();
+            em.getTransaction().commit();
+        } catch(NoResultException e) {
+            account = null;
+            em.getTransaction().rollback();
+        }
         return Optional.ofNullable(account);
     }
 
